@@ -129,4 +129,62 @@ SELECT winner, subject
   FROM nobel
  WHERE yr=1984
  ORDER BY subject IN ('physics','chemistry'), subject,winner
- 
+
+## SELECT from select
+### 1. Bigger than Russia
+SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+### 2. Richer than UK
+SELECT name 
+FROM world
+WHERE continent = 'Europe' AND gdp/population > (SELECT gdp/population
+             FROM world
+             WHERE name = 'United Kingdom')
+### 3. Neighbors of Argentina and Australia
+SELECT name, continent
+FROM world
+WHERE continent = 'Americas' OR continent = 'Oceania'
+### 4. Between Canada and Poland
+SELECT name, population 
+FROM world
+WHERE population > (SELECT population FROM world WHERE name = 'United Kingdom') AND population < (SELECT population FROM world WHERE name = 'Germany')
+### 5. Percentages of Germany
+SELECT name, CONCAT(ROUND((population / (SELECT population FROM world WHERE name = 'Germany'))*100,0),'%') AS percentage
+FROM world
+WHERE continent = 'Europe'
+### 6. Bigger than every country in Europe
+SELECT name
+FROM world
+WHERE gdp > ALL(SELECT gdp
+                                           FROM world
+                                           WHERE continent = 'Europe'
+                                           AND gdp IS NOT NULL)  
+### 7. Largest in each continent
+SELECT continent, name, area FROM world x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND area>0)
+### 8. First Country of each continent
+SELECT continent, MIN(name) FROM world x
+GROUP BY continent
+ORDER BY name
+### 9. Difficult Questions
+SELECT name, continent, population 
+FROM world x
+WHERE NOT EXISTS( SELECT population 
+                   FROM world y 
+                   WHERE x.continent = y.continent
+                   AND population >= 25000000)
+### 10. Three times bigger
+SELECT name, continent
+FROM world x
+WHERE population >= ALL(SELECT population * 3
+                        FROM world y
+                        WHERE x.continent = y.continent
+                        AND x.name <> y.name)
+
+  
+

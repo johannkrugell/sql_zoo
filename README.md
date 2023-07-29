@@ -67,3 +67,66 @@ WHERE name LIKE '%a%'
   AND name LIKE '%o%'
   AND name LIKE '%u%'
   AND name NOT LIKE '% %'
+
+## SELECT from Nobel Tutorial
+### 1. Winners for 1950
+SELECT yr, subject, winner
+  FROM nobel
+ WHERE yr = 1950
+### 2. 1962 Literature
+SELECT winner
+  FROM nobel
+ WHERE yr = 1962
+   AND subject = 'literature'
+### 3. Albert Einstein
+SELECT yr, subject
+FROM nobel 
+WHERE winner = 'Albert Einstein'
+### 4. Reent Prizes
+SELECT winner
+FROM nobel 
+WHERE subject = 'peace' AND yr >= 2000
+### 5. Literature in 1980's
+SELECT yr, subject, winner
+FROM nobel
+WHERE subject = 'literature' AND yr BETWEEN 1980 AND 1989
+### 6. Only presidents
+SELECT * FROM nobel
+ WHERE winner IN ('Theodore Roosevelt',
+                  'Woodrow Wilson',
+                  'Jimmy Carter',
+'Barack Obama')
+### 7. John
+SELECT winner
+FROM nobel
+WHERE winner LIKE 'John_%'
+### 8. Chemistry and Physics from different years
+SELECT yr, subject, winner
+FROM nobel
+WHERE yr = 1980 and subject = 'physics' OR yr = 1984 and subject = 'chemistry'
+### 9. Exclude chemists and medics
+SELECT yr, subject, winner
+FROM nobel
+WHERE yr = 1980 AND subject NOT IN ('chemistry', 'medicine')
+### 10. Early medicine and literature 
+SELECT yr, subject, winner
+FROM nobel
+WHERE subject = 'medicine' AND yr < 1910 OR subject = 'literature' AND yr >= 2004
+### 11. Umlaut
+SELECT yr, subject, winner
+FROM nobel 
+WHERE winner LIKE '%ünberg%'
+### 12. Apostrophe
+SELECT * 
+FROM nobel 
+WHERE winner LIKE '%O''NEILL%'
+### 13. Knights of the realm
+SELECT winner, yr, subject 
+FROM nobel
+WHERE winner LIKE 'Sir%' ORDER BY yr DESC
+### 14. Chemistry and Physics last
+SELECT winner, subject
+  FROM nobel
+ WHERE yr=1984
+ ORDER BY subject IN ('physics','chemistry'), subject,winner
+ 
